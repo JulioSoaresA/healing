@@ -1,6 +1,7 @@
 from pathlib import Path
 import os
 import sys
+from django.contrib.messages import constants
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -119,3 +120,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 PROJECT_ROOT = os.path.dirname(__file__)
 sys.path.insert(0, os.path.join(PROJECT_ROOT, '../apps'))
+
+MESSAGE_TAGS = {
+ constants.DEBUG: 'alert-primary',
+ constants.ERROR: 'alert-danger',
+ constants.SUCCESS: 'alert-success',
+ constants.INFO: 'alert-info',
+ constants.WARNING: 'alert-warning',
+}

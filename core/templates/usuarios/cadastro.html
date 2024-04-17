@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block 'head' %}
- <link rel="stylesheet" href="{% static 'usuarios/css/usuarios.css' %}">
+<link rel="stylesheet" href="{% static 'usuarios/css/usuarios.css' %}">
 {% endblock 'head' %}
 
 {% block 'body' %}
@@ -17,8 +17,18 @@
                     <label class="text-logo">HEALING</label>
                 </section>
                 <hr>
+                {% if messages %}
+                <br>
+                {% for message in messages %}
+                <section class="alert {{message.tags}}">
+                    {{message}}
+                </section>
+                {% endfor %}
+                {% endif %}
 
-                <form action="" method="post">
+
+                <form action="{% url 'cadastro' %}" method="POST">
+                    {% csrf_token %}
                     <h2 class="fonte-destaque1">Cadastre-se</h2>
                     <br>
                     <label for="">Username</label>
