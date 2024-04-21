@@ -67,4 +67,4 @@ def minhas_consultas(request):
             minhas_consultas = minhas_consultas.filter(data_aberta__user__in=medicos.values_list('user', flat=True))
 
 
-        return render(request, 'pacientes/minhas_consultas.html', locals())
+        return render(request, 'pacientes/consultas_medico.html', locals())
