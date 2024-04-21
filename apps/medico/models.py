@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from datetime import datetime
 
 class Especialidades(models.Model):
     especialidade = models.CharField(max_length=100)
@@ -24,6 +25,10 @@ class DadosMedico(models.Model):
     valor_consulta = models.FloatField(default=100)
     def __str__(self):
         return self.user.username
+
+    @property
+    def proxima_data(self):
+        return DatasAbertas.objects.filter(user=self.user, data__gte=datetime.now(), agendado=False).order_by('data').first()
 
 
 class DatasAbertas(models.Model):
