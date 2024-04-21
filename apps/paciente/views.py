@@ -47,3 +47,24 @@ def agendar_horario(request, id_data_aberta):
         messages.add_message(request, constants.SUCCESS, 'Horário agendado com sucesso.')
 
         return redirect('/pacientes/minhas_consultas/')
+
+
+def minhas_consultas(request):
+    if request.method == "GET":
+        especialidades = Especialidades.objects.all()
+        medicos = DadosMedico.objects.all()
+        minhas_consultas = Consulta.objects.filter(paciente=request.user, data_aberta__data__gte=datetime.now())
+
+        especialidades_filtrar = request.GET.get('especialidades')
+        data_filtrar = request.GET.get('data')
+
+        if data_filtrar:
+            minhas_consultas = minhas_consultas.filter(data_aberta__data__date=data_filtrar)
+
+        if especialidades_filtrar:
+            especialidades = Especialidades.objects.filter(especialidade__icontains=especialidades_filtrar)
+            medicos = medicos.filter(especialidade__especialidade__icontains=especialidades.values_list('especialidade', flat=True))
+            minhas_consultas = minhas_consultas.filter(data_aberta__user__in=medicos.values_list('user', flat=True))
+
+
+        return render(request, 'pacientes/minhas_consultas.html', locals())
