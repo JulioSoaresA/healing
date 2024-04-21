@@ -104,4 +104,4 @@ def consultas_medico(request):
 
     return render(request, 'medicos/consultas_medico.html',{'consultas_hoje': consultas_hoje,
                                                     'consultas_restantes': consultas_restantes,
-                                                    'is_medico': is_medico(request)})
+                                                    'eh_medico': is_medico(request)})
