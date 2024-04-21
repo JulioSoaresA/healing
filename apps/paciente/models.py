@@ -1,7 +1,6 @@
 from django.db import models
 from medico.models import DatasAbertas
 from django.contrib.auth.models import User
-from datetime import datetime
 
 class Consulta(models.Model):
     status_choices = (

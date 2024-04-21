@@ -80,3 +80,23 @@ def consulta(request, id_consulta):
         consulta = Consulta.objects.get(id=id_consulta)
         dado_medico = DadosMedico.objects.get(user=consulta.data_aberta.user)
         return render(request, 'pacientes/consulta.html', locals())
+
+
+def cancelar_consulta(request, id_consulta):
+    consulta = Consulta.objects.get(id=id_consulta)
+
+    if request.user != consulta.paciente:
+        messages.add_message(request, constants.WARNING, 'Você não tem permissão para cancelar essa consulta.')
+        return redirect('/pacientes/minhas_consultas/')
+
+    if consulta.status == 'F':
+        messages.add_message(request, constants.WARNING, 'Essa consulta já foi finalizada, você não pode cancela-la.')
+        return redirect('/pacientes/minhas_consultas/')
+
+    if consulta.status == 'C':
+        messages.add_message(request, constants.WARNING, 'Essa consulta já foi cancelada.')
+        return redirect('/pacientes/minhas_consultas/')
+
+    consulta.status = 'C'
+    consulta.save()
+    return redirect('/pacientes/minhas_consultas/')

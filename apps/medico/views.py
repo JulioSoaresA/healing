@@ -135,4 +135,17 @@ def consulta_area_medico(request, id_consulta):
 
         messages.add_message(request, constants.SUCCESS, 'Consulta inicializada com sucesso.')
         return redirect(f'/medicos/consulta_area_medico/{id_consulta}')
-    
+
+
+def finalizar_consulta(request, id_consulta):
+    if not is_medico(request):
+        messages.add_message(request, constants.WARNING, 'Somente médicos podem acessar essa página.')
+        return redirect('/usuarios/logout')
+
+    consulta = Consulta.objects.get(id=id_consulta)
+    if request.user != consulta.data_aberta.user:
+        messages.add_message(request, constants.WARNING, 'Você não pode finalizar uma consulta que não é sua')
+        return redirect(f'/medicos/consulta_area_medico/{id_consulta}')
+    consulta.status = 'F'
+    consulta.save()
+    return redirect(f'/medicos/consulta_area_medico/{id_consulta}')
