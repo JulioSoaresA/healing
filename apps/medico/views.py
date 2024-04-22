@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from .models import Especialidades, DadosMedico, DatasAbertas
-from paciente.models import Consulta
+from paciente.models import Consulta, Documento
 from django.shortcuts import redirect
 from django.contrib import messages
 from django.contrib.messages import constants
@@ -115,6 +115,7 @@ def consulta_area_medico(request, id_consulta):
     if request.method == "GET":
         eh_medico = is_medico(request)
         consulta = Consulta.objects.get(id=id_consulta)
+        documentos = Documento.objects.filter(consulta=consulta)
         return render(request, 'medicos/consulta_area_medico.html', locals())
 
     elif request.method == "POST":
@@ -148,4 +149,35 @@ def finalizar_consulta(request, id_consulta):
         return redirect(f'/medicos/consulta_area_medico/{id_consulta}')
     consulta.status = 'F'
     consulta.save()
+    return redirect(f'/medicos/consulta_area_medico/{id_consulta}')
+
+
+def add_documento(request, id_consulta):
+    if not is_medico(request):
+        messages.add_message(request, constants.WARNING, 'Somente médicos podem acessar essa página.')
+        return redirect('/usuarios/logout')
+
+    consulta = Consulta.objects.get(id=id_consulta)
+
+    if consulta.data_aberta.user != request.user:
+        messages.add_message(request, constants.ERROR, 'Essa consulta não é sua!')
+        return redirect(f'/medicos/consulta_area_medico/{id_consulta}')
+
+    titulo = request.POST.get('titulo')
+    documento = request.FILES.get('documento')
+
+    if not documento:
+        messages.add_message(request, constants.WARNING, 'Adicione o documento.')
+        return redirect(f'/medicos/consulta_area_medico/{id_consulta}')
+
+    documento = Documento(
+        consulta=consulta,
+        titulo=titulo,
+        documento=documento
+
+    )
+
+    documento.save()
+
+    messages.add_message(request, constants.SUCCESS, 'Documento enviado com sucesso!')
     return redirect(f'/medicos/consulta_area_medico/{id_consulta}')

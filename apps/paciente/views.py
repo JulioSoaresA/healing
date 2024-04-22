@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import Consulta
+from .models import Consulta, Documento
 from medico.models import DadosMedico, DatasAbertas, Especialidades
 from medico.views import is_medico
 from datetime import datetime
@@ -79,6 +79,7 @@ def consulta(request, id_consulta):
         eh_medico = is_medico(request)
         consulta = Consulta.objects.get(id=id_consulta)
         dado_medico = DadosMedico.objects.get(user=consulta.data_aberta.user)
+        documentos = Documento.objects.filter(consulta=consulta)
         return render(request, 'pacientes/consulta.html', locals())
 
 

@@ -74,13 +74,13 @@
 
             <hr>
             <h3 class="p-bold">Meus documentos</h3>
-            <br>
-
-            <br>
-            <br>
-            <br>
-            <br>
-        </div>
+            {% if documentos %}
+            <hr>
+            {% for documento in documentos %}
+            <a href="{{documento.documento.url}}" class="link documentos"><i class="bi bi-file-arrow-down"></i></a>
+            {% endfor %}
+            <hr>
+            {% endif %}
         <div class="col-md"></div>
     </div>
 
