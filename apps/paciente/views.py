@@ -6,8 +6,13 @@ from datetime import datetime
 from django.shortcuts import redirect
 from django.contrib import messages
 from django.contrib.messages import constants
+from django.contrib.auth.decorators import login_required
 
 def home(request):
+    user = request.user
+    if user.is_anonymous:
+        return redirect('/usuarios/login/')
+
     if request.method == "GET":
         eh_medico = is_medico(request)
         medicos = DadosMedico.objects.all()
@@ -25,6 +30,7 @@ def home(request):
         return render(request, 'pacientes/home.html', locals())
 
 
+@login_required
 def escolher_horario(request, id_dados_medicos):
     if request.method == "GET":
         eh_medico = is_medico(request)
@@ -33,6 +39,7 @@ def escolher_horario(request, id_dados_medicos):
         return render(request, 'pacientes/escolher_horario.html', locals())
 
 
+@login_required
 def agendar_horario(request, id_data_aberta):
     if request.method == "GET":
         data_aberta = DatasAbertas.objects.get(id=id_data_aberta)
@@ -52,6 +59,7 @@ def agendar_horario(request, id_data_aberta):
         return redirect('/pacientes/minhas_consultas/')
 
 
+@login_required
 def minhas_consultas(request):
     if request.method == "GET":
         eh_medico = is_medico(request)
@@ -74,6 +82,7 @@ def minhas_consultas(request):
         return render(request, 'pacientes/minhas_consultas.html', locals())
 
 
+@login_required
 def consulta(request, id_consulta):
     if request.method == 'GET':
         eh_medico = is_medico(request)
@@ -83,6 +92,7 @@ def consulta(request, id_consulta):
         return render(request, 'pacientes/consulta.html', locals())
 
 
+@login_required
 def cancelar_consulta(request, id_consulta):
     consulta = Consulta.objects.get(id=id_consulta)
 
