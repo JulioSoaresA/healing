@@ -21,8 +21,13 @@
     <form action="{% url 'minhas_consultas' %}" method="GET">
         <div class="row">
             <div class="col-md">
-                <input type="text" name="especialidades" id="" class="form-control shadow-main-color" placeholder="Especialidades médias">
+                <select name="especialidades" class="form-control shadow-main-color">
+                    {% for especialidade in especialidades %}}
+                    <option value="{{ especialidade.id }}">{{ especialidade }}</option>
+                    {% endfor %}
+                </select>
             </div>
+
             <div class="col-md">
                 <input type="date" name="data" id="" class="form-control shadow-main-color" placeholder="Data da consulta">
             </div>

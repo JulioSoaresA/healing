@@ -71,12 +71,10 @@ def minhas_consultas(request):
         data_filtrar = request.GET.get('data')
 
         if data_filtrar:
-            minhas_consultas = minhas_consultas.filter(data_aberta__data__date=data_filtrar)
+            minhas_consultas = minhas_consultas.filter(data_aberta__data__gte=data_filtrar)
 
         if especialidades_filtrar:
-            especialidades = Especialidades.objects.filter(especialidade__icontains=especialidades_filtrar)
-            medicos = medicos.filter(especialidade__especialidade__icontains=especialidades.values_list('especialidade', flat=True))
-            minhas_consultas = minhas_consultas.filter(data_aberta__user__in=medicos.values_list('user', flat=True))
+            minhas_consultas = minhas_consultas.filter(data_aberta__user__dadosmedico__especialidade__id=especialidades_filtrar)
 
 
         return render(request, 'pacientes/minhas_consultas.html', locals())
