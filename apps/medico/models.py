@@ -10,8 +10,14 @@ class Especialidades(models.Model):
 
 
 class DadosMedico(models.Model):
+    SEXO_CHOICES = (
+        ('M', 'Masculino'),
+        ('F', 'Feminino'),
+        ('O', 'prefiro não dizer')
+    )
     crm = models.CharField(max_length=30)
     nome = models.CharField(max_length=100)
+    sexo = models.CharField(max_length=1, choices=SEXO_CHOICES)
     cep = models.CharField(max_length=15)
     rua = models.CharField(max_length=100)
     bairro = models.CharField(max_length=100)
@@ -24,7 +30,7 @@ class DadosMedico(models.Model):
     especialidade = models.ForeignKey(Especialidades, on_delete=models.DO_NOTHING, null=True, blank=True)
     valor_consulta = models.FloatField(default=100)
     def __str__(self):
-        return self.user.username
+        return self.nome
 
     @property
     def proxima_data(self):

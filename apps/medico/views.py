@@ -26,6 +26,7 @@ def cadastro_medico(request):
     elif request.method == "POST":
         crm = request.POST.get('crm')
         nome = request.POST.get('nome')
+        sexo = request.POST.get('sexo')
         cep = request.POST.get('cep')
         rua = request.POST.get('rua')
         bairro = request.POST.get('bairro')
@@ -41,6 +42,7 @@ def cadastro_medico(request):
         dados_medico = DadosMedico(
             crm=crm,
             nome=nome,
+            sexo=sexo,
             cep=cep,
             rua=rua,
             bairro=bairro,
@@ -61,6 +63,7 @@ def cadastro_medico(request):
 
 @login_required
 def abrir_horario(request):
+    eh_medico = is_medico(request)
 
     if not is_medico(request):
         messages.add_message(request, constants.WARNING, 'Somente médicos podem acessar essa página.')

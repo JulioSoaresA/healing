@@ -26,6 +26,9 @@ def home(request):
 
         if especialidades_filtrar:
             medicos = medicos.filter(especialidade_id__in=especialidades_filtrar)
+        
+        if eh_medico:
+            return redirect('/medicos/abrir_horario/')
 
         return render(request, 'pacientes/home.html', locals())
 
