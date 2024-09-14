@@ -63,13 +63,17 @@
 
         <div class="col-md-4">
             <p style="font-size: 25px" class="p-bold">Lembretes</p>
-
-            <p class="bg-main-lembrete">
-                <span class="p-bold"><i class="bi bi-exclamation-triangle-fill icon-differential"></i>&nbsp&nbsp Consulta com Pedro Sampario em 7 dias.</span>
-            </p>
-
-
-
+            {% if consultas %}
+            {% for consulta in consultas %}
+                <p class="bg-main-lembrete">
+                    <span class="p-bold"><i class="bi bi-exclamation-triangle-fill icon-differential"></i>&nbsp&nbsp Consulta com {{ consulta.medico.nome }} {{ consulta.data_aberta.dias_ate_data }}.</span>
+                </p>
+            {% endfor %}
+            {% else %}
+                <p class="bg-main-lembrete">
+                    <span class="p-bold"><i class="bi bi-exclamation-triangle-fill icon-differential"></i>&nbsp&nbsp Sem lembretes.</span>
+                </p>
+            {% endif %}
         </div>
     </div>
 </div>

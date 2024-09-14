@@ -17,6 +17,7 @@ def home(request):
         eh_medico = is_medico(request)
         medicos = DadosMedico.objects.all()
         especialidades = Especialidades.objects.all()
+        consultas = Consulta.objects.filter(paciente=request.user, data_aberta__data__gte=datetime.now())
 
         medico_filtrar = request.GET.get('medico')
         especialidades_filtrar = request.GET.getlist('especialidades')
@@ -46,9 +47,11 @@ def escolher_horario(request, id_dados_medicos):
 def agendar_horario(request, id_data_aberta):
     if request.method == "GET":
         data_aberta = DatasAbertas.objects.get(id=id_data_aberta)
+        medico = DadosMedico.objects.get(user=data_aberta.user)
 
         horario_agendado = Consulta(
             paciente=request.user,
+            medico=medico,
             data_aberta=data_aberta
         )
 

@@ -1,6 +1,7 @@
 from django.db import models
 from medico.models import DatasAbertas
 from django.contrib.auth.models import User
+from medico.models import DadosMedico
 
 class Consulta(models.Model):
     status_choices = (
@@ -11,6 +12,7 @@ class Consulta(models.Model):
 
     )
     paciente = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+    medico = models.ForeignKey(DadosMedico, on_delete=models.DO_NOTHING)
     data_aberta = models.ForeignKey(DatasAbertas, on_delete=models.DO_NOTHING)
     status = models.CharField(max_length=1, choices=status_choices, default='A')
     link = models.URLField(null=True, blank=True)

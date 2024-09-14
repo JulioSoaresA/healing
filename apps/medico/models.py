@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from datetime import datetime
+from django.utils import timezone
 
 class Especialidades(models.Model):
     especialidade = models.CharField(max_length=100)
@@ -47,3 +48,22 @@ class DatasAbertas(models.Model):
 
     def data_formatada(self):
         return self.data.strftime('%d/%m/%Y %H:%M')
+    
+    def dias_ate_data(self):
+        # Obtém a data atual (apenas a parte da data, sem a hora)
+        hoje = timezone.now().date()
+
+        # Obtém a data cadastrada (sem a hora)
+        data_cadastrada = self.data.date()
+
+        # Calcula a diferença em dias
+        diferenca = (data_cadastrada - hoje).days
+        
+        if diferenca == 0:
+            return 'Hoje'
+        elif diferenca == 1:
+            return f'em {diferenca} dia'
+        elif diferenca < 0:
+            return 'Data passada'
+        else:
+            return f'em {diferenca} dias'
