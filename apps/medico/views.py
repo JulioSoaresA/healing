@@ -6,6 +6,9 @@ from django.shortcuts import redirect
 from django.contrib import messages
 from django.contrib.messages import constants
 from datetime import datetime, timedelta
+from django.utils import timezone
+from django.db.models import Count
+from django.db.models.functions import TruncDate
 
 
 def is_medico(request):
@@ -187,3 +190,39 @@ def add_documento(request, id_consulta):
 
     messages.add_message(request, constants.SUCCESS, 'Documento enviado com sucesso!')
     return redirect(f'/medicos/consulta_area_medico/{id_consulta}')
+
+
+@login_required
+def dashboard(request):
+    eh_medico = is_medico(request)
+    if not eh_medico:
+        messages.add_message(request, constants.WARNING, 'Somente médicos podem acessar essa página.')
+        return redirect('/usuarios/logout')
+
+    # Verificar se o usuário forneceu um período personalizado
+    dias = request.GET.get('dias', None)
+    data_inicio = timezone.now() - timedelta(days=7)
+    data_fim = timezone.now()
+
+    if dias:
+        if dias == '30':
+            data_inicio = timezone.now() - timedelta(days=30)
+            data_fim = timezone.now()
+        elif dias == '15':
+            data_inicio = timezone.now() - timedelta(days=15)
+            data_fim = timezone.now()
+
+    consultas = Consulta.objects.filter(
+        medico__user=request.user,
+        data_aberta__data__range=[data_inicio, data_fim],
+        status='F'
+    ).annotate(data_somente=TruncDate('data_aberta__data')).values('data_somente').annotate(quantidade=Count('id')).order_by('data_somente')
+
+    datas = [consulta['data_somente'].strftime('%d/%m') for consulta in consultas]
+    quantidade = [consulta['quantidade'] for consulta in consultas]
+
+    return render(request, 'medicos/dashboard.html', {
+        'datas': datas,
+        'quantidade': quantidade,
+        'eh_medico': eh_medico,
+    })
