@@ -71,7 +71,8 @@ def minhas_consultas(request):
         eh_medico = is_medico(request)
         especialidades = Especialidades.objects.all()
         medicos = DadosMedico.objects.all()
-        minhas_consultas = Consulta.objects.filter(paciente=request.user, data_aberta__data__gte=datetime.now())
+        minhas_consultas = Consulta.objects.filter(paciente=request.user, data_aberta__data__gte=datetime.now()).filter(
+        data_aberta__data__lt=hoje + timedelta(days=1))
 
         especialidades_filtrar = request.GET.get('especialidades')
         data_filtrar = request.GET.get('data')
