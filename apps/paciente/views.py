@@ -69,7 +69,7 @@ def agendar_horario(request, id_data_aberta):
 def minhas_consultas(request):
     if request.method == "GET":
         eh_medico = is_medico(request)
-         hoje = datetime.now().date()
+        hoje = datetime.now().date()
         especialidades = Especialidades.objects.all()
         medicos = DadosMedico.objects.all()
         minhas_consultas = Consulta.objects.filter(paciente=request.user, data_aberta__data__gte=hoje).filter(
