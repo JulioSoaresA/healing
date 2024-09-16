@@ -2,7 +2,7 @@ from django.shortcuts import render
 from .models import Consulta, Documento
 from medico.models import DadosMedico, DatasAbertas, Especialidades
 from medico.views import is_medico
-from datetime import datetime
+from datetime import datetime, timedelta
 from django.shortcuts import redirect
 from django.contrib import messages
 from django.contrib.messages import constants
